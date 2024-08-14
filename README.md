@@ -10,7 +10,7 @@ Este teste consiste em criar um pequeno cadastro de clientes com vínculo de con
 1. Primeiro, crie um repositório público no Github (crie uma conta se você não possuir).
 2. Em seguida, implemente o projeto tal qual descrito abaixo, em seu clone local.
 3. Faça o push do seu projeto local para um repositório público no Github.
-3. Por fim, envie um via e-mail com o link do projeto em seu repositório para os contatos: 
+3. Por fim, envie um via e-mail com o link do projeto em seu repositório para os contatos: <br>
 rh@casadeapostas.com e murilo.c@casadeapostas.com
 
 # Descrição do projeto
