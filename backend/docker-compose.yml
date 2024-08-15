@@ -1,0 +1,13 @@
+services:
+  db:
+    container_name: fullstack_challenge_db
+    image: postgres:16
+    restart: always
+    shm_size: 128mb
+    environment:
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASS}
+    ports:
+      - ${DATABASE_PORT}:5432
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
