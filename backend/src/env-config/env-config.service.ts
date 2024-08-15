@@ -1,12 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { IEnvConfigService } from './env-config-service.interface';
 
 @Injectable()
-export class EnvConfigService {
+export class EnvConfigService implements IEnvConfigService {
   constructor(private readonly configService: ConfigService) {}
 
   public getServerPort(): number {
     return this.configService.getOrThrow<number>('SERVER_PORT', {
+      infer: true,
+    });
+  }
+
+  public getServerJwtSecret(): string {
+    return this.configService.getOrThrow<number>('SERVER_JWT_SECRET', {
       infer: true,
     });
   }
