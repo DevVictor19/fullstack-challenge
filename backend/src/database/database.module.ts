@@ -6,13 +6,13 @@ import { User } from 'src/users/users.entity';
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
-      useFactory: (EnvConfigProvider: IEnvConfigProvider) => ({
+      useFactory: (envConfigProvider: IEnvConfigProvider) => ({
         type: 'postgres',
-        host: EnvConfigProvider.getDatabaseHost(),
-        port: EnvConfigProvider.getDatabasePort(),
-        username: EnvConfigProvider.getDatabaseUser(),
-        password: EnvConfigProvider.getDatabasePass(),
-        database: EnvConfigProvider.getDatabaseName(),
+        host: envConfigProvider.getDatabaseHost(),
+        port: envConfigProvider.getDatabasePort(),
+        username: envConfigProvider.getDatabaseUser(),
+        password: envConfigProvider.getDatabasePass(),
+        database: envConfigProvider.getDatabaseName(),
         entities: [User],
         synchronize: true, // only in development!
       }),

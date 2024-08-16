@@ -12,8 +12,8 @@ import { SignupUserDto } from './dtos/signup-user.dto';
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly JwtProvider: IJwtProvider,
-    private readonly BcryptProvider: IBcryptProvider,
+    private readonly jwtProvider: IJwtProvider,
+    private readonly bcryptProvider: IBcryptProvider,
     private readonly usersService: UsersService,
   ) {}
 
@@ -24,7 +24,7 @@ export class AuthService {
       throw new BadRequestException('Esse email já está cadastrado');
     }
 
-    const hashedPass = await this.BcryptProvider.hash(password);
+    const hashedPass = await this.bcryptProvider.hash(password);
 
     await this.usersService.create({ email, password: hashedPass });
   }
@@ -36,7 +36,7 @@ export class AuthService {
       throw new UnauthorizedException('Email ou senha inválidos');
     }
 
-    const isValidPass = await this.BcryptProvider.compare(
+    const isValidPass = await this.bcryptProvider.compare(
       password,
       user.password,
     );
@@ -49,7 +49,7 @@ export class AuthService {
       user_email: user.email,
     };
 
-    const token = this.JwtProvider.sign({ payload, expiresIn: '2h' });
+    const token = this.jwtProvider.sign({ payload, expiresIn: '2h' });
 
     return {
       token,
