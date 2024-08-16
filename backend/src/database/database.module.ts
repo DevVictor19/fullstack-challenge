@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Client } from 'src/clients/entities/client.entity';
 import { IEnvConfigProvider } from 'src/env-config/env-config-provider.interface';
-import { User } from 'src/users/entities/users.entity';
+import { User } from 'src/users/entities/user.entity';
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { User } from 'src/users/entities/users.entity';
         username: envConfigProvider.getDatabaseUser(),
         password: envConfigProvider.getDatabasePass(),
         database: envConfigProvider.getDatabaseName(),
-        entities: [User],
+        entities: [User, Client],
         synchronize: true, // only in development!
       }),
       inject: [IEnvConfigProvider],
