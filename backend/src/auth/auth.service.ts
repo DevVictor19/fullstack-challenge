@@ -8,6 +8,7 @@ import { IJwtProvider } from 'src/jwt/jwt-service.interface';
 import { UsersService } from 'src/users/users.service';
 import { LoginUserDto } from './dtos/login-user.dto';
 import { SignupUserDto } from './dtos/signup-user.dto';
+import { LoginUserResponseDto } from './dtos/login-user-response.dto';
 
 @Injectable()
 export class AuthService {
@@ -17,7 +18,7 @@ export class AuthService {
     private readonly usersService: UsersService,
   ) {}
 
-  public async signup({ email, password }: SignupUserDto) {
+  public async signup({ email, password }: SignupUserDto): Promise<void> {
     const user = await this.usersService.findByEmail(email);
 
     if (user) {
@@ -29,7 +30,10 @@ export class AuthService {
     await this.usersService.create({ email, password: hashedPass });
   }
 
-  public async login({ email, password }: LoginUserDto) {
+  public async login({
+    email,
+    password,
+  }: LoginUserDto): Promise<LoginUserResponseDto> {
     const user = await this.usersService.findByEmail(email);
 
     if (!user) {
