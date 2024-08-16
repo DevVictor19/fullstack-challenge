@@ -12,7 +12,7 @@ export class JwtProvider implements IJwtProvider {
   private readonly secret: string;
 
   constructor(private readonly envConfigProvider: IEnvConfigProvider) {
-    this.secret = envConfigProvider.getServerJwtSecret();
+    this.secret = this.envConfigProvider.getServerJwtSecret();
   }
 
   public sign({ payload, expiresIn }: TokenSignOptions): string {
