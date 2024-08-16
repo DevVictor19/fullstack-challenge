@@ -4,15 +4,15 @@ import {
   JwtPayload,
   TokenSignOptions,
 } from './jwt-service.interface';
-import { IEnvConfigService } from 'src/env-config/env-config-service.interface';
+import { IEnvConfigProvider } from 'src/env-config/env-config-provider.interface';
 import { sign, verify } from 'jsonwebtoken';
 
 @Injectable()
 export class JwtService implements IJwtService {
   private readonly secret: string;
 
-  constructor(private readonly envConfigService: IEnvConfigService) {
-    this.secret = envConfigService.getServerJwtSecret();
+  constructor(private readonly EnvConfigProvider: IEnvConfigProvider) {
+    this.secret = EnvConfigProvider.getServerJwtSecret();
   }
 
   public sign({ payload, expiresIn }: TokenSignOptions): string {

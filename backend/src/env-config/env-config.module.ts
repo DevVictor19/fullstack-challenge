@@ -1,17 +1,17 @@
 import { Global, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { EnvConfigService } from './env-config.service';
-import { IEnvConfigService } from './env-config-service.interface';
+import { EnvConfigProvider } from './env-config.provider';
+import { IEnvConfigProvider } from './env-config-provider.interface';
 
 @Global()
 @Module({
   imports: [ConfigModule.forRoot()],
   providers: [
     {
-      provide: IEnvConfigService,
-      useClass: EnvConfigService,
+      provide: IEnvConfigProvider,
+      useClass: EnvConfigProvider,
     },
   ],
-  exports: [IEnvConfigService],
+  exports: [IEnvConfigProvider],
 })
 export class EnvConfigModule {}

@@ -1,22 +1,22 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { IEnvConfigService } from 'src/env-config/env-config-service.interface';
+import { IEnvConfigProvider } from 'src/env-config/env-config-provider.interface';
 import { User } from 'src/users/users.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
-      useFactory: (envConfigService: IEnvConfigService) => ({
+      useFactory: (EnvConfigProvider: IEnvConfigProvider) => ({
         type: 'postgres',
-        host: envConfigService.getDatabaseHost(),
-        port: envConfigService.getDatabasePort(),
-        username: envConfigService.getDatabaseUser(),
-        password: envConfigService.getDatabasePass(),
-        database: envConfigService.getDatabaseName(),
+        host: EnvConfigProvider.getDatabaseHost(),
+        port: EnvConfigProvider.getDatabasePort(),
+        username: EnvConfigProvider.getDatabaseUser(),
+        password: EnvConfigProvider.getDatabasePass(),
+        database: EnvConfigProvider.getDatabaseName(),
         entities: [User],
         synchronize: true, // only in development!
       }),
-      inject: [IEnvConfigService],
+      inject: [IEnvConfigProvider],
     }),
   ],
 })

@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { HttpStatus, ValidationPipe } from '@nestjs/common';
-import { IEnvConfigService } from './env-config/env-config-service.interface';
+import { IEnvConfigProvider } from './env-config/env-config-provider.interface';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,6 +14,6 @@ async function bootstrap() {
     }),
   );
 
-  await app.listen(app.get(IEnvConfigService).getServerPort());
+  await app.listen(app.get(IEnvConfigProvider).getServerPort());
 }
 bootstrap();
