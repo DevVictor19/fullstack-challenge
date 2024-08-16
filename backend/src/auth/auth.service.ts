@@ -4,7 +4,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { IBcryptService } from 'src/bcrypt/bcrypt-service.interface';
-import { IJwtService } from 'src/jwt/jwt-service.interface';
+import { IJwtProvider } from 'src/jwt/jwt-service.interface';
 import { UsersService } from 'src/users/users.service';
 import { LoginUserDto } from './dtos/login-user.dto';
 import { SignupUserDto } from './dtos/signup-user.dto';
@@ -12,7 +12,7 @@ import { SignupUserDto } from './dtos/signup-user.dto';
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly jwtService: IJwtService,
+    private readonly JwtProvider: IJwtProvider,
     private readonly bcryptService: IBcryptService,
     private readonly usersService: UsersService,
   ) {}
@@ -49,7 +49,7 @@ export class AuthService {
       user_email: user.email,
     };
 
-    const token = this.jwtService.sign({ payload, expiresIn: '2h' });
+    const token = this.JwtProvider.sign({ payload, expiresIn: '2h' });
 
     return {
       token,

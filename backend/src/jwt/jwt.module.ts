@@ -1,15 +1,15 @@
 import { Global, Module } from '@nestjs/common';
-import { JwtService } from './jwt.service';
-import { IJwtService } from './jwt-service.interface';
+import { JwtProvider } from './jwt.provider';
+import { IJwtProvider } from './jwt-service.interface';
 
 @Global()
 @Module({
   providers: [
     {
-      provide: IJwtService,
-      useClass: JwtService,
+      provide: IJwtProvider,
+      useClass: JwtProvider,
     },
   ],
-  exports: [IJwtService],
+  exports: [IJwtProvider],
 })
 export class JwtModule {}

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import {
-  IJwtService,
+  IJwtProvider,
   JwtPayload,
   TokenSignOptions,
 } from './jwt-service.interface';
@@ -8,11 +8,11 @@ import { IEnvConfigProvider } from 'src/env-config/env-config-provider.interface
 import { sign, verify } from 'jsonwebtoken';
 
 @Injectable()
-export class JwtService implements IJwtService {
+export class JwtProvider implements IJwtProvider {
   private readonly secret: string;
 
-  constructor(private readonly EnvConfigProvider: IEnvConfigProvider) {
-    this.secret = EnvConfigProvider.getServerJwtSecret();
+  constructor(private readonly envConfigProvider: IEnvConfigProvider) {
+    this.secret = envConfigProvider.getServerJwtSecret();
   }
 
   public sign({ payload, expiresIn }: TokenSignOptions): string {

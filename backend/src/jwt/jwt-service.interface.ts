@@ -17,7 +17,7 @@ export type JwtPayload = {
   jti?: string | undefined;
 };
 
-export abstract class IJwtService {
+export abstract class IJwtProvider {
   public abstract sign({ payload, expiresIn }: TokenSignOptions): string;
   public abstract verify(token: string): JwtPayload | string;
 }
