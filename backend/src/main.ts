@@ -19,6 +19,7 @@ async function bootstrap() {
     .setTitle('Fullstack Challenge API')
     .setDescription('Api de gerenciamento de clientes e seus contatos')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
