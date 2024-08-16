@@ -1,15 +1,15 @@
 import { Global, Module } from '@nestjs/common';
-import { BcryptService } from './bcrypt.service';
-import { IBcryptService } from './bcrypt-service.interface';
+import { BcryptProvider } from './bcrypt.provider';
+import { IBcryptProvider } from './bcrypt-service.interface';
 
 @Global()
 @Module({
   providers: [
     {
-      provide: IBcryptService,
-      useClass: BcryptService,
+      provide: IBcryptProvider,
+      useClass: BcryptProvider,
     },
   ],
-  exports: [IBcryptService],
+  exports: [IBcryptProvider],
 })
 export class BcryptModule {}

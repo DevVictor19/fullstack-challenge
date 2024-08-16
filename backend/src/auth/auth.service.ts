@@ -3,7 +3,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { IBcryptService } from 'src/bcrypt/bcrypt-service.interface';
+import { IBcryptProvider } from 'src/bcrypt/bcrypt-service.interface';
 import { IJwtProvider } from 'src/jwt/jwt-service.interface';
 import { UsersService } from 'src/users/users.service';
 import { LoginUserDto } from './dtos/login-user.dto';
@@ -13,7 +13,7 @@ import { SignupUserDto } from './dtos/signup-user.dto';
 export class AuthService {
   constructor(
     private readonly JwtProvider: IJwtProvider,
-    private readonly bcryptService: IBcryptService,
+    private readonly BcryptProvider: IBcryptProvider,
     private readonly usersService: UsersService,
   ) {}
 
@@ -24,7 +24,7 @@ export class AuthService {
       throw new BadRequestException('Esse email já está cadastrado');
     }
 
-    const hashedPass = await this.bcryptService.hash(password);
+    const hashedPass = await this.BcryptProvider.hash(password);
 
     await this.usersService.create({ email, password: hashedPass });
   }
@@ -36,7 +36,7 @@ export class AuthService {
       throw new UnauthorizedException('Email ou senha inválidos');
     }
 
-    const isValidPass = await this.bcryptService.compare(
+    const isValidPass = await this.BcryptProvider.compare(
       password,
       user.password,
     );
