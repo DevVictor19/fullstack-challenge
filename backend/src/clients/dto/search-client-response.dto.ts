@@ -1,7 +1,7 @@
-import { FindOneClientResponseDto } from './find-one-client-response.dto';
+import { ClientResponseDto } from './client-response.dto';
 
 export class SearchClientResponseDto {
-  data: FindOneClientResponseDto[];
+  data: ClientResponseDto[];
   total: number;
   page: number;
   lastPage: number;

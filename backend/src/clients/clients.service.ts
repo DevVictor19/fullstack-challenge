@@ -9,7 +9,8 @@ import { Repository } from 'typeorm';
 import { Client } from './entities/client.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SearchClientResponseDto } from './dto/search-client-response.dto';
-import { FindOneClientResponseDto } from './dto/find-one-client-response.dto';
+import { ClientResponseDto } from './dto/client-response.dto';
+import { ClientMapper } from './mappers/clients.mapper';
 
 @Injectable()
 export class ClientsService {
@@ -22,24 +23,10 @@ export class ClientsService {
     userId: number,
     createClientDto: CreateClientDto,
   ): Promise<void> {
-    const [clientWithSameEmail, clientWithSamePn] = await Promise.all([
-      this.clientRepository.findOneBy({ email: createClientDto.email }),
-      this.clientRepository.findOneBy({
-        phone_number: createClientDto.phone_number,
-      }),
-    ]);
-
-    if (clientWithSameEmail) {
-      throw new BadRequestException(
-        `Esse email já está em uso pelo cliente de id=${clientWithSameEmail.id}`,
-      );
-    }
-
-    if (clientWithSamePn) {
-      throw new BadRequestException(
-        `Esse telefone já está em uso pelo cliente de id=${clientWithSamePn.id}`,
-      );
-    }
+    await this.checkIfEmailOrPhoneNumberAlreadyExists(
+      createClientDto.email,
+      createClientDto.phone_number,
+    );
 
     const entity = this.clientRepository.create({
       ...createClientDto,
@@ -62,7 +49,7 @@ export class ClientsService {
     });
 
     return {
-      data: result,
+      data: ClientMapper.toResponseList(result),
       total,
       page,
       lastPage: Math.ceil(total / limit),
@@ -72,7 +59,7 @@ export class ClientsService {
   public async findOne(
     userId: number,
     clientId: number,
-  ): Promise<FindOneClientResponseDto> {
+  ): Promise<ClientResponseDto> {
     const client = await this.clientRepository.findOneBy({
       user_id: userId,
       id: clientId,
@@ -82,7 +69,7 @@ export class ClientsService {
       throw new NotFoundException(`Cliente de id=${clientId} não encontrado`);
     }
 
-    return client;
+    return ClientMapper.toResponseObject(client);
   }
 
   public async update(
@@ -91,6 +78,27 @@ export class ClientsService {
     updateClientDto: UpdateClientDto,
   ): Promise<void> {
     const client = await this.findOne(userId, clientId);
+
+    const [clientWithSameEmail, clientWithSamePn] = await Promise.all([
+      this.findByEmail(updateClientDto.email),
+      this.findByPhoneNumber(updateClientDto.phone_number),
+    ]);
+
+    const anotherClientHasTheSameEmail = clientWithSameEmail?.id !== client.id;
+
+    if (clientWithSameEmail && anotherClientHasTheSameEmail) {
+      throw new BadRequestException(
+        `Esse email já está em uso pelo cliente de id=${clientWithSameEmail.id}`,
+      );
+    }
+
+    const anotherClientHasTheSamePn = clientWithSamePn?.id !== client.id;
+
+    if (clientWithSamePn && anotherClientHasTheSamePn) {
+      throw new BadRequestException(
+        `Esse telefone já está em uso pelo cliente de id=${clientWithSamePn.id}`,
+      );
+    }
 
     Object.assign(client, updateClientDto);
 
@@ -101,5 +109,37 @@ export class ClientsService {
     const client = await this.findOne(userId, clientId);
 
     await this.clientRepository.delete(client);
+  }
+
+  private async checkIfEmailOrPhoneNumberAlreadyExists(
+    email: string,
+    phoneNumber: string,
+  ) {
+    const [clientWithSameEmail, clientWithSamePn] = await Promise.all([
+      this.findByEmail(email),
+      this.findByPhoneNumber(phoneNumber),
+    ]);
+
+    if (clientWithSameEmail) {
+      throw new BadRequestException(
+        `Esse email já está em uso pelo cliente de id=${clientWithSameEmail.id}`,
+      );
+    }
+
+    if (clientWithSamePn) {
+      throw new BadRequestException(
+        `Esse telefone já está em uso pelo cliente de id=${clientWithSamePn.id}`,
+      );
+    }
+  }
+
+  private async findByEmail(email: string) {
+    return this.clientRepository.findOneBy({ email });
+  }
+
+  private async findByPhoneNumber(phoneNumber: string) {
+    return this.clientRepository.findOneBy({
+      phone_number: phoneNumber,
+    });
   }
 }
