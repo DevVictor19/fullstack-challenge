@@ -58,7 +58,22 @@ export class ClientsController {
     return this.clientsService.findOne(user.id, id);
   }
 
+  @Get(':id/contacts')
+  @ApiResponse({
+    description: 'Cliente não encontrado',
+    status: HttpStatus.NOT_FOUND,
+  })
+  findOneWithContacts(@Req() req: any, @Param('id') id: number) {
+    const user: User = req.user;
+
+    return this.clientsService.findOneWithContacts(user.id, id);
+  }
+
   @Put(':id')
+  @ApiResponse({
+    description: 'Email ou telefone já utilizados',
+    status: HttpStatus.BAD_REQUEST,
+  })
   @ApiResponse({
     description: 'Cliente não encontrado',
     status: HttpStatus.NOT_FOUND,

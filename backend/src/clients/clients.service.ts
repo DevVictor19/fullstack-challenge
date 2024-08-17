@@ -72,6 +72,19 @@ export class ClientsService {
     return ClientMapper.toResponseObject(client);
   }
 
+  public async findOneWithContacts(userId: number, clientId: number) {
+    const results = await this.clientRepository.findOne({
+      where: { user_id: userId, id: clientId },
+      relations: { contacts: true },
+    });
+
+    if (!results) {
+      throw new NotFoundException(`Cliente de id=${clientId} não encontrado`);
+    }
+
+    return results;
+  }
+
   public async update(
     userId: number,
     clientId: number,
