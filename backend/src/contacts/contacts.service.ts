@@ -29,7 +29,10 @@ export class ContactsService {
       createContactDto.phone_number,
     );
 
-    const entity = this.contactsRepository.create(createContactDto);
+    const entity = this.contactsRepository.create({
+      ...createContactDto,
+      user_id: userId,
+    });
 
     await this.contactsRepository.save(entity);
   }
@@ -47,10 +50,10 @@ export class ContactsService {
     });
 
     return {
-      data: ContactMapper.toResponseList(result),
       total,
       page,
       lastPage: Math.ceil(total / limit),
+      data: ContactMapper.toResponseList(result),
     };
   }
 
