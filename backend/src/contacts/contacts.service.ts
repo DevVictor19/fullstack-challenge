@@ -9,8 +9,9 @@ import { Repository } from 'typeorm';
 import { Contact } from './entities/contact.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ClientsService } from 'src/clients/clients.service';
-import { FindOneContactResponseDto } from './dto/find-one-contact-response.dto';
+import { ContactResponseDto } from './dto/contact-response.dto';
 import { SearchContactResponseDto } from './dto/search-contact-response.dto';
+import { ContactMapper } from './mappers/contacts.mapper';
 
 @Injectable()
 export class ContactsService {
@@ -23,24 +24,10 @@ export class ContactsService {
   public async create(userId: number, createContactDto: CreateContactDto) {
     await this.clientsService.findOne(userId, createContactDto.client_id);
 
-    const [contactWithSameEmail, contactWithSamePn] = await Promise.all([
-      this.contactsRepository.findOneBy({ email: createContactDto.email }),
-      this.contactsRepository.findOneBy({
-        phone_number: createContactDto.phone_number,
-      }),
-    ]);
-
-    if (contactWithSameEmail) {
-      throw new BadRequestException(
-        `Esse email já está em uso pelo contato de id=${contactWithSameEmail.id}`,
-      );
-    }
-
-    if (contactWithSamePn) {
-      throw new BadRequestException(
-        `Esse telefone já está em uso pelo contato de id=${contactWithSamePn.id}`,
-      );
-    }
+    await this.checkIfEmailOrPhoneNumberAlreadyExists(
+      createContactDto.email,
+      createContactDto.phone_number,
+    );
 
     const entity = this.contactsRepository.create(createContactDto);
 
@@ -60,7 +47,7 @@ export class ContactsService {
     });
 
     return {
-      data: result,
+      data: ContactMapper.toResponseList(result),
       total,
       page,
       lastPage: Math.ceil(total / limit),
@@ -70,7 +57,7 @@ export class ContactsService {
   public async findOne(
     userId: number,
     contactId: number,
-  ): Promise<FindOneContactResponseDto> {
+  ): Promise<ContactResponseDto> {
     const contact = await this.contactsRepository.findOneBy({
       user_id: userId,
       id: contactId,
@@ -80,7 +67,7 @@ export class ContactsService {
       throw new NotFoundException(`Contato de id=${contactId} não encontrado`);
     }
 
-    return contact;
+    return ContactMapper.toResponseObject(contact);
   }
 
   public async update(
@@ -89,6 +76,28 @@ export class ContactsService {
     updateContactDto: UpdateContactDto,
   ) {
     const contact = await this.findOne(userId, contactId);
+
+    const [contactWithSameEmail, contactWithSamePn] = await Promise.all([
+      this.findByEmail(updateContactDto.email),
+      this.findByPhoneNumber(updateContactDto.phone_number),
+    ]);
+
+    const anotherClientHasTheSameEmail =
+      contactWithSameEmail?.id !== contact.id;
+
+    if (contactWithSameEmail && anotherClientHasTheSameEmail) {
+      throw new BadRequestException(
+        `Esse email já está em uso pelo contato de id=${contactWithSameEmail.id}`,
+      );
+    }
+
+    const anotherClientHasTheSamePn = contactWithSamePn?.id !== contact.id;
+
+    if (contactWithSamePn && anotherClientHasTheSamePn) {
+      throw new BadRequestException(
+        `Esse telefone já está em uso pelo contato de id=${contactWithSamePn.id}`,
+      );
+    }
 
     Object.assign(contact, updateContactDto);
 
@@ -99,5 +108,35 @@ export class ContactsService {
     const contact = await this.findOne(userId, contactId);
 
     await this.contactsRepository.delete(contact);
+  }
+
+  private async checkIfEmailOrPhoneNumberAlreadyExists(
+    email: string,
+    phoneNumber: string,
+  ) {
+    const [contactWithSameEmail, contactWithSamePn] = await Promise.all([
+      this.findByEmail(email),
+      this.findByPhoneNumber(phoneNumber),
+    ]);
+
+    if (contactWithSameEmail) {
+      throw new BadRequestException(
+        `Esse email já está em uso pelo contato de id=${contactWithSameEmail.id}`,
+      );
+    }
+
+    if (contactWithSamePn) {
+      throw new BadRequestException(
+        `Esse telefone já está em uso pelo contato de id=${contactWithSamePn.id}`,
+      );
+    }
+  }
+
+  private async findByEmail(email: string) {
+    return this.contactsRepository.findOneBy({ email });
+  }
+
+  private async findByPhoneNumber(phoneNumber: string) {
+    return this.contactsRepository.findOneBy({ phone_number: phoneNumber });
   }
 }
