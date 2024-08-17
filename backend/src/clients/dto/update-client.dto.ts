@@ -1,4 +1,4 @@
-import { IsEmail, IsString, Length } from 'class-validator';
+import { IsEmail, IsNumberString, IsString, Length } from 'class-validator';
 
 export class UpdateClientDto {
   @IsString()
@@ -8,7 +8,7 @@ export class UpdateClientDto {
   @IsEmail()
   email: string;
 
-  @IsString()
+  @IsNumberString({ no_symbols: true })
   @Length(11, 11)
   phone_number: string;
 }

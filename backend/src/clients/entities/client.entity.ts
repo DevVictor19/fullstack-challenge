@@ -29,5 +29,5 @@ export class Client {
 
   @ManyToOne(() => User, (user) => user.id)
   @JoinColumn({ name: 'user_id' })
-  users: User[];
+  user: User;
 }

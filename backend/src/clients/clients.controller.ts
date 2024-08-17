@@ -30,14 +30,14 @@ export class ClientsController {
     description: 'Email ou telefone já utilizados',
     status: HttpStatus.BAD_REQUEST,
   })
-  async create(@Req() req: any, @Body() createClientDto: CreateClientDto) {
+  create(@Req() req: any, @Body() createClientDto: CreateClientDto) {
     const user: User = req.user;
 
-    await this.clientsService.create(user.id, createClientDto);
+    return this.clientsService.create(user.id, createClientDto);
   }
 
   @Get()
-  async findAll(
+  findAll(
     @Req() req: any,
     @Query('page', ParseIntPipe) page: number,
     @Query('limit', ParseIntPipe) limit: number,
@@ -52,7 +52,7 @@ export class ClientsController {
     description: 'Cliente não encontrado',
     status: HttpStatus.NOT_FOUND,
   })
-  async findOne(@Req() req: any, @Param('id') id: number) {
+  findOne(@Req() req: any, @Param('id') id: number) {
     const user: User = req.user;
 
     return this.clientsService.findOne(user.id, id);
@@ -63,7 +63,7 @@ export class ClientsController {
     description: 'Cliente não encontrado',
     status: HttpStatus.NOT_FOUND,
   })
-  async update(
+  update(
     @Req() req: any,
     @Param('id') id: number,
     @Body() updateClientDto: UpdateClientDto,
@@ -78,7 +78,7 @@ export class ClientsController {
     description: 'Cliente não encontrado',
     status: HttpStatus.NOT_FOUND,
   })
-  async remove(@Req() req: any, @Param('id') id: number) {
+  remove(@Req() req: any, @Param('id') id: number) {
     const user: User = req.user;
 
     return this.clientsService.remove(user.id, id);

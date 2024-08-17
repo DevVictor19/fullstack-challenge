@@ -1,4 +1,10 @@
-import { IsEmail, IsISO8601, IsString, Length } from 'class-validator';
+import {
+  IsEmail,
+  IsISO8601,
+  IsNumberString,
+  IsString,
+  Length,
+} from 'class-validator';
 
 export class CreateClientDto {
   @IsString()
@@ -8,7 +14,7 @@ export class CreateClientDto {
   @IsEmail()
   email: string;
 
-  @IsString()
+  @IsNumberString({ no_symbols: true })
   @Length(11, 11)
   phone_number: string;
 

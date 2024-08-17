@@ -22,22 +22,22 @@ export class ClientsService {
     userId: number,
     createClientDto: CreateClientDto,
   ): Promise<void> {
-    const [userWithSameEmail, userWithSamePn] = await Promise.all([
+    const [clientWithSameEmail, clientWithSamePn] = await Promise.all([
       this.clientRepository.findOneBy({ email: createClientDto.email }),
       this.clientRepository.findOneBy({
         phone_number: createClientDto.phone_number,
       }),
     ]);
 
-    if (userWithSameEmail) {
+    if (clientWithSameEmail) {
       throw new BadRequestException(
-        `Esse email já está em uso pelo cliente de id=${userWithSameEmail.id}`,
+        `Esse email já está em uso pelo cliente de id=${clientWithSameEmail.id}`,
       );
     }
 
-    if (userWithSamePn) {
+    if (clientWithSamePn) {
       throw new BadRequestException(
-        `Esse telefone já está em uso pelo cliente de id=${userWithSamePn.id}`,
+        `Esse telefone já está em uso pelo cliente de id=${clientWithSamePn.id}`,
       );
     }
 
@@ -71,15 +71,15 @@ export class ClientsService {
 
   public async findOne(
     userId: number,
-    id: number,
+    clientId: number,
   ): Promise<FindOneClientResponseDto> {
     const client = await this.clientRepository.findOneBy({
       user_id: userId,
-      id,
+      id: clientId,
     });
 
     if (!client) {
-      throw new NotFoundException(`Cliente de id=${id} não encontrado`);
+      throw new NotFoundException(`Cliente de id=${clientId} não encontrado`);
     }
 
     return client;
@@ -87,18 +87,18 @@ export class ClientsService {
 
   public async update(
     userId: number,
-    id: number,
+    clientId: number,
     updateClientDto: UpdateClientDto,
   ): Promise<void> {
-    const client = await this.findOne(userId, id);
+    const client = await this.findOne(userId, clientId);
 
     Object.assign(client, updateClientDto);
 
     await this.clientRepository.save(client);
   }
 
-  public async remove(userId: number, id: number): Promise<void> {
-    const client = await this.findOne(userId, id);
+  public async remove(userId: number, clientId: number): Promise<void> {
+    const client = await this.findOne(userId, clientId);
 
     await this.clientRepository.delete(client);
   }
