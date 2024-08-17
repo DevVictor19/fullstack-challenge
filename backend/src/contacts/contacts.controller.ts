@@ -8,12 +8,13 @@ import {
   Put,
   Req,
   Query,
+  HttpStatus,
 } from '@nestjs/common';
 import { ContactsService } from './contacts.service';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { UpdateContactDto } from './dto/update-contact.dto';
 import { RequireAuthentication } from 'src/auth/auth.decorator';
-import { ApiBasicAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBasicAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from 'src/users/entities/user.entity';
 
 @ApiTags('Contacts')
@@ -24,6 +25,10 @@ export class ContactsController {
   constructor(private readonly contactsService: ContactsService) {}
 
   @Post()
+  @ApiResponse({
+    description: 'Email ou telefone já utilizados',
+    status: HttpStatus.BAD_REQUEST,
+  })
   create(@Req() req: any, @Body() createContactDto: CreateContactDto) {
     const user: User = req.user;
 
@@ -42,6 +47,10 @@ export class ContactsController {
   }
 
   @Get(':id')
+  @ApiResponse({
+    description: 'Contato não encontrado',
+    status: HttpStatus.NOT_FOUND,
+  })
   findOne(@Req() req: any, @Param('id') id: number) {
     const user: User = req.user;
 
@@ -49,6 +58,14 @@ export class ContactsController {
   }
 
   @Put(':id')
+  @ApiResponse({
+    description: 'Email ou telefone já utilizados',
+    status: HttpStatus.BAD_REQUEST,
+  })
+  @ApiResponse({
+    description: 'Contato não encontrado',
+    status: HttpStatus.NOT_FOUND,
+  })
   update(
     @Req() req: any,
     @Param('id') id: number,
@@ -60,6 +77,10 @@ export class ContactsController {
   }
 
   @Delete(':id')
+  @ApiResponse({
+    description: 'Contato não encontrado',
+    status: HttpStatus.NOT_FOUND,
+  })
   remove(@Req() req: any, @Param('id') id: number) {
     const user: User = req.user;
 
