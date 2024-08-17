@@ -5,6 +5,7 @@ import { JwtModule } from './jwt/jwt.module';
 import { AuthModule } from './auth/auth.module';
 import { BcryptModule } from './bcrypt/bcrypt.module';
 import { ClientsModule } from './clients/clients.module';
+import { ContactsModule } from './contacts/contacts.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ClientsModule } from './clients/clients.module';
     AuthModule,
     BcryptModule,
     ClientsModule,
+    ContactsModule,
   ],
 })
 export class AppModule {}
