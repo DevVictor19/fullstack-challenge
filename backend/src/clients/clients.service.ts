@@ -49,10 +49,10 @@ export class ClientsService {
     });
 
     return {
-      data: ClientMapper.toResponseList(result),
       total,
       page,
       lastPage: Math.ceil(total / limit),
+      data: ClientMapper.toResponseList(result),
     };
   }
 
