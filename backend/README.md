@@ -1,73 +1,98 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Fullstack-challenge backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Api de gerenciamento de clientes e contatos feita durante o desafio fullstack da empresa Casa de Apostas.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Funcionalidades
 
-## Description
+- Autenticação (email e senha)
+- CRUD de Clientes
+- CRUD de Contatos
+- Geração de relatório dos contatos do cliente
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Modelagem do Banco (MER)
 
-## Installation
+<img src="./docs/mer.png" alt="Modelo entidade relacionamento do banco" />
 
-```bash
-$ npm install
+## Executanto o projeto de forma local
+
+### 1. Instalando Requisitos
+
+Para executar o projeto é necessário alguns programas.
+
+Minha solução foi feita utilizando NodeJS e por isso é necessário ter ele instalado na sua máquina para rodar o projeto.
+
+Além disso, estou utilizando um container do PostgreSQL com o Docker para subir o banco. Para subir o container é preciso ter o Docker e Docker Compose instalado para proesseguir.
+
+- <a href="https://nodejs.org/en/download/package-manager" target="__blank" >NodeJS V21</a>
+- <a href="https://docs.docker.com/engine/install/" target="__blank" >Docker e Docker Compose</a>
+
+### 2. Configurando .env
+
+Nesse projeto eu utilizo variáveis de ambiente para proteger algumas informações sensíveis.
+
+Para rodar corretamente a aplicação é necessário criar um arquivo com o nome <b>.env</b> na pasta raíz do projeto e inserir nele exatamente o que eu deixei no arquivo <b>.env.example</b> (esse arquivo está na pasta raíz do projeto também).
+
+Pode copiar esses valores e inserir no .env criado
+
+```
+# Server
+SERVER_PORT=8080
+SERVER_JWT_SECRET=secret
+
+# Database
+DATABASE_USER=admin
+DATABASE_PASS=admin123
+DATABASE_PORT=5432
+DATABASE_HOST=localhost
+DATABASE_NAME=fullstack_challenge
 ```
 
-## Running the app
+### 3. Subindo o banco
 
-```bash
-# development
-$ npm run start
+Para subir o banco é muito simples, basta rodar o comando pelo terminal na pasta raíz do projeto.
 
-# watch mode
-$ npm run start:dev
+Linux:
 
-# production mode
-$ npm run start:prod
+```
+docker compose up -d
 ```
 
-## Test
+### 4. Subindo a aplicação
 
-```bash
-# unit tests
-$ npm run test
+Para rodar a aplicação rode no terminal na pasta raíz do projeto esse comando:
 
-# e2e tests
-$ npm run test:e2e
+Modo de desenvolvimento <b>(Habilita a Documentação do Swagger):</b>
 
-# test coverage
-$ npm run test:cov
+```
+npm run start:dev
 ```
 
-## Support
+Modo de produção:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```
+npm run start
+```
 
-## Stay in touch
+## Documentação dos Enpoints da API
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### 1. Importar JSON dos endpoints para o Postman
 
-## License
+<a href="./docs/api-endpoints-postman.json" download="api-endpoints-postman.json" target="__blank">Baixar JSON</a>
 
-Nest is [MIT licensed](LICENSE).
+Caso o link não funcione você pode encontrar o json dentro da pasta <b> docs</b> na raíz do projeto.
+
+### 2. Usar Swagger UI
+
+Ao subir a aplicação utilizando o comando
+
+```
+npm run start:dev
+```
+
+É possível acessar a documentação do Swagger pelo navegador quer fica disponível na rota <b>/api</b>.
+
+É so abrir o navegador no localhost e digitar na url "/api".
+
+<a href="http://localhost:8080/api"> 
+Documentação Swagger
+</a>
