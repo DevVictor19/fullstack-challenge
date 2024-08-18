@@ -3,7 +3,7 @@ import {
   IJwtProvider,
   JwtPayload,
   TokenSignOptions,
-} from './jwt-service.interface';
+} from './jwt-provider.interface';
 import { IEnvConfigProvider } from 'src/env-config/env-config-provider.interface';
 import { sign, verify } from 'jsonwebtoken';
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { IBcryptProvider } from './bcrypt-service.interface';
+import { IBcryptProvider } from './bcrypt-provider.interface';
 import { compare, genSalt, hash } from 'bcrypt';
 
 @Injectable()

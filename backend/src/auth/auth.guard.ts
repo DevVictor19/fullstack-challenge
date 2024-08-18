@@ -4,7 +4,7 @@ import {
   ExecutionContext,
   Injectable,
 } from '@nestjs/common';
-import { IJwtProvider } from 'src/jwt/jwt-service.interface';
+import { IJwtProvider } from 'src/jwt/jwt-provider.interface';
 import { UsersService } from 'src/users/users.service';
 
 @Injectable()

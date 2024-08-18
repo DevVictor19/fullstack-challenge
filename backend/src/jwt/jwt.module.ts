@@ -1,6 +1,6 @@
 import { Global, Module } from '@nestjs/common';
 import { JwtProvider } from './jwt.provider';
-import { IJwtProvider } from './jwt-service.interface';
+import { IJwtProvider } from './jwt-provider.interface';
 
 @Global()
 @Module({
