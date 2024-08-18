@@ -1,7 +1,5 @@
+import ChakraContextProvider from "@/contexts/ChakraContextProvider";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Desafio - Fullstack",
@@ -15,7 +13,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-br">
-      <body className={inter.className}>{children}</body>
+      <body>
+        <ChakraContextProvider>{children}</ChakraContextProvider>
+      </body>
     </html>
   );
 }
