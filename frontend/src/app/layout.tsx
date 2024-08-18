@@ -1,4 +1,4 @@
-import ChakraContextProvider from "@/contexts/ChakraContextProvider";
+import Providers from "@/contexts/Providers";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -14,7 +14,7 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <body>
-        <ChakraContextProvider>{children}</ChakraContextProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
