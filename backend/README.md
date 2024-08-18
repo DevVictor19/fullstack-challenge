@@ -59,7 +59,13 @@ docker compose up -d
 
 ### 4. Subindo a aplicação
 
-Para rodar a aplicação rode no terminal na pasta raíz do projeto esse comando:
+Para instalar as dependências do projeto execute esse comando no terminal na pasta raíz do projeto:
+
+```
+npm i
+```
+
+Após instalar as dependências, execute no terminal na pasta raíz do projeto esse comando, para subir a aplicação:
 
 Modo de desenvolvimento <b>(Habilita a Documentação do Swagger):</b>
 
